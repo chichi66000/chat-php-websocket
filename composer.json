@@ -1,0 +1,21 @@
+{
+    "name": "lekha/new-chat",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "khanhchi",
+            "email": "le.khanhchi@yahoo.fr"
+        }
+    ],
+    "require": {
+        "symfony/var-dumper": "^6.1",
+        "altorouter/altorouter": "^2.0",
+        "vlucas/valitron": "^1.4",
+        "vlucas/phpdotenv": "^5.5",
+        "cloudinary/cloudinary_php": "^2.9"
+    }
+}
