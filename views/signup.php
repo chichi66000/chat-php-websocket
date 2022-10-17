@@ -1,6 +1,12 @@
 <?php
+
+require_once ("../src/config/configCloudinary.php");
+require_once ("../src/config/load_env.php");
+
 use App\Form;
 use App\Validate;
+use App\ValidateUploadFile;
+use Cloudinary\Api\Upload\UploadApi;
 
 $errors = [];
 $link = $router->url('users');
@@ -20,7 +26,32 @@ else {
 
     // validate ok
     if($v->validateSignup()) {
-        dump("validate ok");
+        // validate image : pas plus de 2Mo; format .jpg jpeg, png
+        if (isset($_FILES['file']) && $_FILES['file']['name'] !== "")
+        {
+            $image = new ValidateUploadFile($_FILES['file']);
+            $check = $image->checkFile();
+
+            if ($check === true) 
+            {
+                $upload = new UploadApi();
+                try {
+                    $data = $upload->upload($_FILES['file']['tmp_name']);
+                    dump("upload file ok");
+                }
+                catch (\Exception $e) {
+                    $errors = $e->getMessage();;
+                }
+            }
+            // validate image not ok
+            else {
+                $errors[] = $image->getMessageError();
+            }
+        }
+        // pas image 
+        else {
+            $errors[] = "Please send a photo for your profile";
+        }
     }
     // validate not ok
     else {
