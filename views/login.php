@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 use App\Form;
 use App\Validate;
 use App\ConnectionPDO;
@@ -32,7 +34,7 @@ else {
         }
         // user founded verify password
         else {
-            $user = $pdo->getUserByEmail($email);
+            $user = $pdo->getUser('email', $email);
             
             if(password_verify($password, $user[0]['password']) === true) {
                 // update status = Online; login to page Users

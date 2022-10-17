@@ -6,7 +6,8 @@ use App\ConnectionPDO;
 if(isset($_SESSION['unique_id'])) {
     $unique_id = $_SESSION['unique_id'];
     $pdo = new ConnectionPDO();
-    $pdo->logOut($unique_id);
+    $pdo->getUser('unique_id', $unique_id);
+    $pdo->updateStatus('unique_id', $unique_id, 'Offline');
     session_unset();
     session_destroy();
     http_response_code(200);

@@ -58,12 +58,12 @@ class ConnectionPDO {
         }
     }
 
-    public function updateStatus (string $email, string $status): bool 
+    public function updateStatus (string $field, string $value, string $status): bool 
     {
-        $query = $this->pdo->prepare("UPDATE user SET status = :status WHERE {$email} = :email");
+        $query = $this->pdo->prepare("UPDATE user SET status = :status WHERE $field = :field");
         $result = $query->execute([
             "status" => $status,
-            "{$email}" => $email
+            $field => $value
         ]);
         dump($query);
         if ($result === false) {
@@ -72,29 +72,30 @@ class ConnectionPDO {
         else { return true; }
     }
 
-    public function getUserByEmail($email) 
+    public function getUser(string $field, string $value) 
     {
-        $query = $this->pdo->prepare("SELECT * FROM user WHERE email = :email");
-        $query->execute(['email' => $email]);
+        $query = $this->pdo->prepare("SELECT * FROM user WHERE $field = ?");
+        $query->execute([$field => $value]);
         $result = $query->fetchAll();
         return $result;
     }
 
-    public function logOut (string $unique_id) 
-    {
-        $query = $this->pdo->prepare("SELECT status FROM user WHERE unique_id = :unique_id");
-        $query->execute(['unique_id' => $unique_id]);
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+    // public function logOut (string $field, string $value) 
+    // {
+    //     $query = $this->pdo->prepare("SELECT status FROM user WHERE $field = ? ");
+    //     $query->execute([$field => $value]);
+    //     $result = $query->fetchAll(PDO::FETCH_ASSOC);
         
-        if (!empty($result)) {
-            // changer le status du user => Offline 
-            $status = "Offline";
-            $this->updateStatus($unique_id, $status);
-            http_response_code('200');
-        }
-        else {
-            http_response_code(400);
-            throw new \PDOException("User not founded");
-        }
-    }
+    //     if (!empty($result)) {
+    //         // changer le status du user => Offline 
+    //         // $status = "Offline";
+    //         // $this->updateStatus($field, $value, $status);
+    //         // http_response_code('200');
+    //         return true;
+    //     }
+    //     else {
+    //         // http_response_code(400);
+    //         // throw new \PDOException("User not founded");
+    //     }
+    // }
 }
