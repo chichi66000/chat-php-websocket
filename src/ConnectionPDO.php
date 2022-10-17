@@ -18,13 +18,6 @@ class ConnectionPDO {
         ]);
     }
 
-    // public static function getPDO () :PDO 
-    // {
-    // return new PDO('mysql:dbname=chat;host=127.0.0.1', 'root', '0123', [
-    //   PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    // ]);
-    // }
-
     // insert user into table user
     public function insertUser (string $unique_id, string $firstName, string $lastName, string $email, string $password,string $file, string $status, string $created_at): bool 
     {
@@ -58,10 +51,50 @@ class ConnectionPDO {
         $query->execute(['email' => $email]);
         $result = $query->fetchAll();
         if (empty($result)) {
-            return true;
+            return false;
         }
         else {
+            return true;
+        }
+    }
+
+    public function updateStatus (string $email, string $status): bool 
+    {
+        $query = $this->pdo->prepare("UPDATE user SET status = :status WHERE {$email} = :email");
+        $result = $query->execute([
+            "status" => $status,
+            "{$email}" => $email
+        ]);
+        dump($query);
+        if ($result === false) {
             return false;
+        }
+        else { return true; }
+    }
+
+    public function getUserByEmail($email) 
+    {
+        $query = $this->pdo->prepare("SELECT * FROM user WHERE email = :email");
+        $query->execute(['email' => $email]);
+        $result = $query->fetchAll();
+        return $result;
+    }
+
+    public function logOut (string $unique_id) 
+    {
+        $query = $this->pdo->prepare("SELECT status FROM user WHERE unique_id = :unique_id");
+        $query->execute(['unique_id' => $unique_id]);
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        
+        if (!empty($result)) {
+            // changer le status du user => Offline 
+            $status = "Offline";
+            $this->updateStatus($unique_id, $status);
+            http_response_code('200');
+        }
+        else {
+            http_response_code(400);
+            throw new \PDOException("User not founded");
         }
     }
 }

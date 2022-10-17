@@ -29,8 +29,8 @@ else {
     if($v->validateSignup()) {
         $pdo = new ConnectionPDO();
         $ok = $pdo->checkIfUserExists($email);
-        // check if email exists
-        if( $ok === true) {
+        // check if email exists : false = user does not exist
+        if( $ok === false) {
                 // validate image : pas plus de 2Mo; format .jpg jpeg, png
             if (isset($_FILES['file']) && $_FILES['file']['name'] !== "")
             {
@@ -52,6 +52,8 @@ else {
                         
                         // insert ok
                         if ($result === true) {
+                            session_start();
+                            $_SESSION['unique_id'] = $random_id;
                             header('Location: ' . $link);
                             exit();
                         }
@@ -105,9 +107,6 @@ if(!empty($errors)) {
         }
     }
 }
-dump($errors);
-dump($messagesArray);
-
 
 $form = new Form($_POST, $errors);
 ?>
