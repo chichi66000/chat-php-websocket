@@ -5,6 +5,11 @@ use PDO;
 
 class ConnectionPDO {
     private $pdo;
+    // private $pdoTest;
+
+    private $dsn = 'mysql:dbname=testdb;host=127.0.0.1';
+    private $user = 'dbuser';
+    private $password = 'dbpass';
     // private $first_name;
     // private $last_name; 
     // private $password; 
@@ -12,11 +17,25 @@ class ConnectionPDO {
     // private $email;
     // private $created_at; 
 
-    public function __construct () {
-        $this->pdo = new PDO('mysql:dbname=chat;host=127.0.0.1', 'root', '0123', [
+    public function __construct ($dsn='mysql:dbname=testdb;host=127.0.0.1', $user='root', $password='0123') 
+    {
+        $this->pdo = new PDO($dsn, $user, $password, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
+        // $this->pdoTest = new PDO('mysql:dbname=testchat;host=127.0.0.1', 'root', '0123', [
+        //     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        // ]);
     }
+
+    // public function getPDO() 
+    // {   
+    //     return $this->pdo;
+    // }
+    
+    // public function getPDOTest ()
+    // {
+    //     return $this->pdoTest;
+    // }
 
     // insert user into table user
     public function insertUser (string $unique_id, string $firstName, string $lastName, string $email, string $password,string $file, string $status, string $created_at): bool 
@@ -50,6 +69,7 @@ class ConnectionPDO {
         $query = $this->pdo->prepare("SELECT email FROM user WHERE email = :email");
         $query->execute(['email' => $email]);
         $result = $query->fetchAll();
+        // user not found => array vide
         if (empty($result)) {
             return false;
         }
@@ -62,10 +82,9 @@ class ConnectionPDO {
     {
         $query = $this->pdo->prepare("UPDATE user SET status = :status WHERE $field = :field");
         $result = $query->execute([
-            "status" => $status,
-            $field => $value
+            ":status" => $status,
+            ":field" => $value
         ]);
-        dump($query);
         if ($result === false) {
             return false;
         }
@@ -74,10 +93,30 @@ class ConnectionPDO {
 
     public function getUser(string $field, string $value) 
     {
-        $query = $this->pdo->prepare("SELECT * FROM user WHERE $field = ?");
-        $query->execute([$field => $value]);
+        $query = $this->pdo->prepare("SELECT * FROM user WHERE $field = :field");
+        
+        $r = $query->execute([":field" => $value]);
+        // dd($query);
         $result = $query->fetchAll();
-        return $result;
+        if (empty($result)) {
+            // http_response_code(400);
+            // throw new \PDOException("User not founded");
+            return [];
+        }
+        else {
+            return $result;
+        }
+    }
+
+    public function deleteLastInsertUser () 
+    {
+        $id = $this->pdo->lastInsertId();
+        $query = $this->pdo->prepare("DELETE FROM user WHERE user_id = :id");
+        $result = $query->execute([":id" => $id]);
+        if ($result === true) {
+            return "User delete";
+        }
+        else { return 'User not been deleted' ;}
     }
 
     // public function logOut (string $field, string $value) 

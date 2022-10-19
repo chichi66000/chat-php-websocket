@@ -1,5 +1,6 @@
 <?php
 session_start();
+// require_once ("../src/config/configPDO.php");
 
 use App\Form;
 use App\Validate;
@@ -35,8 +36,9 @@ else {
         // user founded verify password
         else {
             $user = $pdo->getUser('email', $email);
-            
-            if(password_verify($password, $user[0]['password']) === true) {
+            // user founded
+            if (!empty($user)) {
+                if(password_verify($password, $user[0]['password']) === true) {
                 // update status = Online; login to page Users
                 $status = "Online";
                 $pdo->updateStatus('email', $email, $status);
@@ -45,12 +47,19 @@ else {
                 $_SESSION['unique_id'] = $user[0]['unique_id'];
                 header("Location: " . $router->url('users'));
                 
+                }
+                // password false
+                else {
+                    http_response_code(400);
+                    $errors[] = "Email / password invalid";
+                }
             }
-            // password false
+            // user viden
             else {
                 http_response_code(400);
                 $errors[] = "Email / password invalid";
             }
+            
         }
     }
     // validate email & password not ok 
