@@ -46,7 +46,7 @@ final class ConnectionPDOTest extends TestCase {
     }
 
     public function testupdateStatus () {
-        $q = $this->getPDO()->updateStatus('email', 'le@yahoo.com', 'Offline');
+        $q = $this->getPDO()->updateStatus('email', 'lele@yahoo.fr', 'Offline');
         $this->assertNotFalse(true, 'update email avec status ok');
     }
 

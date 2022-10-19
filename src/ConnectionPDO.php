@@ -17,7 +17,7 @@ class ConnectionPDO {
     // private $email;
     // private $created_at; 
 
-    public function __construct ($dsn='mysql:dbname=testdb;host=127.0.0.1', $user='root', $password='0123') 
+    public function __construct ($dsn='mysql:dbname=chat;host=127.0.0.1', $user='root', $password='0123') 
     {
         $this->pdo = new PDO($dsn, $user, $password, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
