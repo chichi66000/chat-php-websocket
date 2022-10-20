@@ -27,15 +27,18 @@ else {
     {
         // check if email exist in database
         $pdo = new ConnectionPDO();
-        $result = $pdo->checkIfUserExists($email);
+        $result = $pdo->checkIfUserExists('email', $email);
         // user isn't in table user
-        if ($result === false) {
+        if (empty($result)) {
             http_response_code(400);
             $errors[] = "Email / password invalid";
         }
         // user founded verify password
         else {
-            $user = $pdo->getUser('email', $email);
+            $user = $result[0];
+            // dd($user);
+
+            // $user = $pdo->getUser('email', $email);
             // dd($user['password']);
             // user founded
             if (!empty($user)) {

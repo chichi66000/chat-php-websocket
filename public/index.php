@@ -11,7 +11,7 @@ $router = new Router(dirname(__DIR__) . '/views');
 
 $router
     // ->get('/', 'index.php', 'home')
-    ->match('/login', 'login', 'login')
+    ->match('/', 'login', 'login')
     ->match('/logout', 'logout', 'logout')
     ->match('/signup', 'signup', 'signup')
     ->match('/users', 'users', 'users')

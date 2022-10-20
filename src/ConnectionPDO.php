@@ -56,8 +56,10 @@ class ConnectionPDO {
 
     public function checkIfUserExists (string $field, string $value) :array
     {
-        $query = $this->pdo->prepare("SELECT email FROM user WHERE $field = :field");
+        $query = $this->pdo->prepare("SELECT * FROM user WHERE $field = :field");
+        
         $query->execute([':field' => $value]);
+        dump($query);
         $result = $query->fetchAll();
         // user not found => array vide
         return $result;

@@ -28,9 +28,10 @@ else {
     // validate ok
     if($v->validateSignup()) {
         $pdo = new ConnectionPDO();
-        $ok = $pdo->checkIfUserExists($email);
+        $ok = $pdo->checkIfUserExists('email', $email);
+        dump($ok);
         // check if email exists : false = user does not exist
-        if( $ok === false) {
+        if( empty($ok)) {
                 // validate image : pas plus de 2Mo; format .jpg jpeg, png
             if (isset($_FILES['file']) && $_FILES['file']['name'] !== "")
             {
@@ -80,7 +81,6 @@ else {
         else {
             http_response_code(400);
             $errors[] = "Email is already in use";
-           
         }
     }
     // validate not ok

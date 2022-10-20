@@ -9,21 +9,21 @@ if (!isset($_SESSION['unique_id'])) {
 }
 else {
     $unique_id = $_SESSION['unique_id'];
-    $user = (new ConnectionPDO)->getUser('unique_id', $unique_id);
+    $user = (new ConnectionPDO)->checkIfUserExists('unique_id', $unique_id)[0];
     $users = (new ConnectionPDO)->getAllUsersExceptOne('unique_id', $unique_id);
     
 }
 ?>
 
 <script>
-    setInterval(function () {
-        fetch('/users', { 
-            method="post",
-            body: new URLSearchParams({
-                "unique_id": })
-        })
-    }
-    , 10000);
+    // setInterval(function () {
+    //     fetch('/users', { 
+    //         method="post",
+    //         body: new URLSearchParams({
+    //             "unique_id": })
+    //     })
+    // }
+    // , 10000);
 </script>
 
 <div class="d-flex justify-content-between my-2 mx-auto col p-2 col-md-6 col-lg-5 border border-1 bg-white">
