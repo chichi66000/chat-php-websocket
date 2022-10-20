@@ -83,6 +83,16 @@ class ConnectionPDO {
         return $query->fetchAll();
     }
 
+    public function getSearchUsersExceptOne (string $searchUsers, string $unique_id): array 
+    {
+        $query = $this->pdo->prepare("SELECT * FROM user WHERE unique_id != :unique_id AND (first_name LIKE '%{$searchUsers}%' OR last_name LIKE '%{$searchUsers}%')");
+        // dd($query);
+        $q = $query->execute([
+            ":unique_id" => $unique_id, 
+        ]);
+        $result = $query->fetchAll();
+        return $result;
+    }
     
     // public function deleteLastInsertUser () 
     // {

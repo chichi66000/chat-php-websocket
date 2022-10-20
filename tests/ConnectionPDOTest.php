@@ -49,25 +49,14 @@ final class ConnectionPDOTest extends TestCase {
         $q = $this->getPDO()->updateStatus('email', 'lele@yahoo.fr', 'Offline');
         $this->assertNotFalse(true, 'update email avec status ok');
     }
-
-    // public function testgetUser () 
-    // {   $field = 'email';
-    //     $value = 'le@yahoo.com';
-    //     $q = $this->getPDO()->getUser($field, $value);
-    //     $this->assertNotNull($q, "user found");
-    // }
-
-    public function testgetUserNotFound () 
-    {   $field = 'email';
-        $value = 'le@yahoo.fr';
-        $q = $this->getPDO()->getUser($field, $value);
-        $this->assertEmpty($q);
-        // $this->assertEmpty($q);
+    public function testGetSearchUsersExceptOne() {
+        $q = $this->getPDO()->getSearchUsersExceptOne("le", '12465');
+        $this->assertNotEmpty($q);
     }
 
-    public function testgetAllUsers () {
-        $q = $this->getPDO()->getAllUsers();
-        $this->assertNotEmpty($q);
+    public function testGetSearchUsersExceptOneNull () {
+        $q = $this->getPDO()->getSearchUsersExceptOne("to", '12465');
+        $this->assertEmpty($q);
         
     }
 }

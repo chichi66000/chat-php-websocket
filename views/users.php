@@ -27,6 +27,8 @@ $userLogin = $users->user[0];
 $allUsers = $users->users;
 $response = $users->renderAllUser($allUsers);
 
+dump($_POST['searchUsers']);
+
 ?>
 
 <div class="d-flex justify-content-between my-2 mx-auto col p-2 col-md-6 col-lg-5 border border-1 bg-white">
@@ -43,7 +45,6 @@ $response = $users->renderAllUser($allUsers);
     </div>
     
     <div>
-
         <a href="<?= $router->url('logout') ?>" class="btn bg-black text-white flex-shrink" >Logout</a>
     </div>
 </div>
@@ -52,8 +53,8 @@ $response = $users->renderAllUser($allUsers);
     <form action="" class="form-group" method="post">
         <span for="search">Select a user to start</span>
         <div class="input-group flex-nowrap">
-            <input id="search" type="search" name="search" placeholder="Enter user to start chatting" class="form-control" >
-            <button class="input-group-text bg-black search-button btn" type="submit">
+            <input id="searchInput" type="search" name="search" placeholder="Enter user to start chatting" class="form-control" >
+            <button id='searchButton' class="input-group-text bg-black search-button btn" type="submit">
                 <i class="bi bi-search text-white" id="search-icon"></i>
             </button>
         </div>
@@ -70,18 +71,36 @@ $response = $users->renderAllUser($allUsers);
 <script>
     // alert('hi');
     let usersList = document.getElementById('usersList');
-    setInterval(function () {
+    let searchInput = document.getElementById('searchInput');
+    let searchButton = document.getElementById('searchButton')
+
+    searchButton.addEventListener('click', function () {
+        let searchUser = searchInput.value;
+        fetch('/search', {
+            method: 'POST',
+            body: new URLSearchParams({
+                'searchUser' : searchUser.toString()
+            })
+        })
+    })
+    
+    function updateUsersList () {
         let xhr = new XMLHttpRequest();
-    xhr.open("GET", "/usersList", true);
-    xhr.onload = ()=>{
-    if(xhr.readyState === XMLHttpRequest.DONE){
-        if(xhr.status === 200){
-          let data = xhr.response;
-          usersList.innerHTML = data;
-          
+        xhr.open("GET", "/usersList", true);
+        xhr.onload = ()=>{
+            if(xhr.readyState === XMLHttpRequest.DONE){
+                if(xhr.status === 200){
+                    let data = xhr.response;
+                    usersList.innerHTML = data;
+                }
+            }
         }
+        xhr.send();
     }
-  }
-  xhr.send();
-    }, 10000)
+
+    setInterval(function () {
+        updateUsersList();
+    }, 1000000)
+
+    document.addEventListener('DOMContentLoaded', updateUsersList());
 </script>
