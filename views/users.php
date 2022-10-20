@@ -75,6 +75,7 @@ $response = $users->renderAllUser($allUsers);
     let searchButton = document.getElementById('searchButton')
     let unsetInterval = false;
 
+    // appel API to search user by last name/first name
     function searchUsers () {
         unsetInterval = true;
         let searchUsers = searchInput.value;
@@ -97,6 +98,8 @@ $response = $users->renderAllUser($allUsers);
             usersList.innerHTML = "Problem with server please try later"
         })
     }
+
+    // les events of search button with click and enter
     searchButton.addEventListener("keypress", function (e) {
         if(e.key === "Enter") {
             e.preventDefault();
@@ -108,7 +111,17 @@ $response = $users->renderAllUser($allUsers);
         e.preventDefault();
         searchUsers();
     })
+
+    // les events with searchInput; to restart setInterval when value = ""
+    searchInput.addEventListener('input', function (e) {
+        let value = this.value;
+        if (value === "") {
+            unsetInterval= false;
+            intervalListener()
+        }
+    })
     
+    // fetch to charge list update Users Connected
     function updateUsersList () {
         console.log(unsetInterval, "unset");
         if (unsetInterval === true) {
@@ -130,10 +143,11 @@ $response = $users->renderAllUser($allUsers);
         
     }
 
-    var intervalListener = self.setInterval(function () {
+    function intervalListener () {self.setInterval(function () {
         updateUsersList();
         
     }, 10000)
-
+    }
+    intervalListener()
     document.addEventListener('DOMContentLoaded', updateUsersList());
 </script>
