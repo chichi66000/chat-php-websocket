@@ -76,10 +76,6 @@ $response = $users->renderAllUser($allUsers);
     let unsetInterval = false;
 
     function searchUsers () {
-
-    }
-    searchButton.addEventListener('click', function (e) {
-        e.preventDefault();
         unsetInterval = true;
         let searchUsers = searchInput.value;
         console.log(searchUsers);
@@ -100,6 +96,17 @@ $response = $users->renderAllUser($allUsers);
             console.log(error);
             usersList.innerHTML = "Problem with server please try later"
         })
+    }
+    searchButton.addEventListener("keypress", function (e) {
+        if(e.key === "Enter") {
+            e.preventDefault();
+            searchUsers();
+        }
+        
+    })
+    searchButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        searchUsers();
     })
     
     function updateUsersList () {
