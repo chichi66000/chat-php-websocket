@@ -73,9 +73,14 @@ $response = $users->renderAllUser($allUsers);
     let usersList = document.getElementById('usersList');
     let searchInput = document.getElementById('searchInput');
     let searchButton = document.getElementById('searchButton')
+    let unsetInterval = false;
 
+    function searchUsers () {
+
+    }
     searchButton.addEventListener('click', function (e) {
         e.preventDefault();
+        unsetInterval = true;
         let searchUsers = searchInput.value;
         console.log(searchUsers);
         fetch('/search', {
@@ -87,30 +92,41 @@ $response = $users->renderAllUser($allUsers);
         .then(response => {
             console.log(response);
                 return response.text()
-            
         })
         .then(body => {
             usersList.innerHTML = body;
         })
+        .catch(error => {
+            console.log(error);
+            usersList.innerHTML = "Problem with server please try later"
+        })
     })
     
     function updateUsersList () {
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", "/usersList", true);
-        xhr.onload = ()=>{
-            if(xhr.readyState === XMLHttpRequest.DONE){
-                if(xhr.status === 200){
-                    let data = xhr.response;
-                    usersList.innerHTML = data;
+        console.log(unsetInterval, "unset");
+        if (unsetInterval === true) {
+            clearInterval(intervalListener)
+        }
+        else {
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", "/usersList", true);
+            xhr.onload = ()=>{
+                if(xhr.readyState === XMLHttpRequest.DONE){
+                    if(xhr.status === 200){
+                        let data = xhr.response;
+                        usersList.innerHTML = data;
+                    }
                 }
             }
+            xhr.send();
         }
-        xhr.send();
+        
     }
 
-    setInterval(function () {
+    var intervalListener = self.setInterval(function () {
         updateUsersList();
-    }, 1000000)
+        
+    }, 10000)
 
     document.addEventListener('DOMContentLoaded', updateUsersList());
 </script>

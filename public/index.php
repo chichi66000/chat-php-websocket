@@ -15,7 +15,7 @@ $router
     ->match('/logout', 'logout', 'logout')
     ->match('/signup', 'signup', 'signup')
     ->match('/users', 'users', 'users')
-    ->match('/usersList', 'fetchAPI/usersList', 'usersList')
+    ->get('/usersList', 'fetchAPI/usersList', 'usersList')
     ->post('/search', 'fetchAPI/searchUsers', 'search')
     ->get('/error', 'NotFound', 'notfound')
     ->run();
