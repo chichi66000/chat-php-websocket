@@ -24,4 +24,4 @@ class CloudinaryUpload extends UploadApi {
             $e->getMessage();
         }
     }
-} -->
+}

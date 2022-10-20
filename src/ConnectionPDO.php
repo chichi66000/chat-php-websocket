@@ -27,16 +27,6 @@ class ConnectionPDO {
         // ]);
     }
 
-    // public function getPDO() 
-    // {   
-    //     return $this->pdo;
-    // }
-    
-    // public function getPDOTest ()
-    // {
-    //     return $this->pdoTest;
-    // }
-
     // insert user into table user
     public function insertUser (string $unique_id, string $firstName, string $lastName, string $email, string $password,string $file, string $status, string $created_at): bool 
     {
@@ -64,18 +54,19 @@ class ConnectionPDO {
         }
     }
 
-    public function checkIfUserExists (string $email) :bool
+    public function checkIfUserExists (string $field, string $value) :array
     {
-        $query = $this->pdo->prepare("SELECT email FROM user WHERE email = :email");
-        $query->execute(['email' => $email]);
+        $query = $this->pdo->prepare("SELECT email FROM user WHERE $field = :field");
+        $query->execute([':field' => $value]);
         $result = $query->fetchAll();
         // user not found => array vide
-        if (empty($result)) {
-            return false;
-        }
-        else {
-            return true;
-        }
+        return $result;
+        // if (empty($result)) {
+        //     return false;
+        // }
+        // else {
+        //     return true;
+        // }
     }
 
     public function updateStatus (string $field, string $value, string $status): bool 
@@ -91,21 +82,28 @@ class ConnectionPDO {
         else { return true; }
     }
 
-    public function getUser(string $field, string $value) 
-    {
-        $query = $this->pdo->prepare("SELECT * FROM user WHERE $field = :field");
+    // public function getUser(string $field, string $value) 
+    // {
+    //     $query = $this->pdo->prepare("SELECT * FROM user WHERE $field = :field");
         
-        $r = $query->execute([":field" => $value]);
-        // dd($query);
-        $result = $query->fetchAll();
-        if (empty($result)) {
-            // http_response_code(400);
-            // throw new \PDOException("User not founded");
-            return [];
-        }
-        else {
-            return $result;
-        }
+    //     $r = $query->execute([":field" => $value]);
+    //     // dd($query);
+    //     $result = $query->fetchAll();
+    //     if (empty($result)) {
+    //         // http_response_code(400);
+    //         // throw new \PDOException("User not founded");
+    //         return [];
+    //     }
+    //     else {
+    //         return $result[0];
+    //     }
+    // }
+
+    public function getAllUsersExceptOne(string $field, string $value):array 
+    {
+        $query = $this->pdo->prepare("SELECT * FROM user WHERE $field != :field ");
+        $query->execute([":field" => $value]);
+        return $query->fetchAll();
     }
 
     public function deleteLastInsertUser () 

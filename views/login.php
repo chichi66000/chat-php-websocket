@@ -36,17 +36,17 @@ else {
         // user founded verify password
         else {
             $user = $pdo->getUser('email', $email);
+            // dd($user['password']);
             // user founded
             if (!empty($user)) {
-                if(password_verify($password, $user[0]['password']) === true) {
+                if(password_verify($password, $user['password']) === true) {
                 // update status = Online; login to page Users
                 $status = "Online";
                 $pdo->updateStatus('email', $email, $status);
                 http_response_code(200);
                 session_start();
-                $_SESSION['unique_id'] = $user[0]['unique_id'];
+                $_SESSION['unique_id'] = $user['unique_id'];
                 header("Location: " . $router->url('users'));
-                
                 }
                 // password false
                 else {
@@ -54,7 +54,7 @@ else {
                     $errors[] = "Email / password invalid";
                 }
             }
-            // user viden
+            // user vide
             else {
                 http_response_code(400);
                 $errors[] = "Email / password invalid";

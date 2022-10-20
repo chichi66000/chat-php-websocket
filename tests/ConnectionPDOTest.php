@@ -33,16 +33,16 @@ final class ConnectionPDOTest extends TestCase {
 
     public function testcheckIfUserExists () 
     {
-        $q = $this->getPDO()->checkIfUserExists("le@yahoo.com");
+        $q = $this->getPDO()->checkIfUserExists("email", "lele@yahoo.fr");
         
-        $this->assertNotFalse(true, "email is in table user");
+        $this->assertNotEmpty($q, "email is in table user");
     }
 
     public function testcheckIfUserNotExists () 
     {
-        $q = $this->getPDO()->checkIfUserExists("le@yahoo.fr");
+        $q = $this->getPDO()->checkIfUserExists("email", "le@yahoo.fr");
         
-        $this->assertFalse(false, "email not in the database");
+        $this->assertEmpty($q, "email not in the database");
     }
 
     public function testupdateStatus () {
@@ -50,12 +50,12 @@ final class ConnectionPDOTest extends TestCase {
         $this->assertNotFalse(true, 'update email avec status ok');
     }
 
-    public function testgetUser () 
-    {   $field = 'email';
-        $value = 'le@yahoo.com';
-        $q = $this->getPDO()->getUser($field, $value);
-        $this->assertNotNull($q, "user found");
-    }
+    // public function testgetUser () 
+    // {   $field = 'email';
+    //     $value = 'le@yahoo.com';
+    //     $q = $this->getPDO()->getUser($field, $value);
+    //     $this->assertNotNull($q, "user found");
+    // }
 
     public function testgetUserNotFound () 
     {   $field = 'email';
@@ -63,5 +63,11 @@ final class ConnectionPDOTest extends TestCase {
         $q = $this->getPDO()->getUser($field, $value);
         $this->assertEmpty($q);
         // $this->assertEmpty($q);
+    }
+
+    public function testgetAllUsers () {
+        $q = $this->getPDO()->getAllUsers();
+        $this->assertNotEmpty($q);
+        
     }
 }
