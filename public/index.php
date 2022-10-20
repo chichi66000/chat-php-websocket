@@ -15,5 +15,6 @@ $router
     ->match('/logout', 'logout', 'logout')
     ->match('/signup', 'signup', 'signup')
     ->match('/users', 'users', 'users')
+    ->match('/usersList', 'usersList', 'usersList')
     ->get('/error', 'NotFound', 'notfound')
     ->run();

@@ -8,7 +8,7 @@ if(isset($_SESSION['unique_id'])) {
     $status = 'Offline';
     $field = 'unique_id';
     $pdo = new ConnectionPDO();
-    $pdo->getUser('unique_id', $unique_id);
+    $pdo->checkIfUserExists('unique_id', $unique_id);
     $pdo->updateStatus($field, $unique_id, $status);
     session_unset();
     session_destroy();

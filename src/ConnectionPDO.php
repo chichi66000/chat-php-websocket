@@ -7,9 +7,10 @@ class ConnectionPDO {
     private $pdo;
     // private $pdoTest;
 
-    private $dsn = 'mysql:dbname=testdb;host=127.0.0.1';
-    private $user = 'dbuser';
-    private $password = 'dbpass';
+    // private $dsn = 'mysql:dbname=testdb;host=127.0.0.1';
+    // private $user = 'dbuser';
+    // private $password = 'dbpass';
+    
     // private $first_name;
     // private $last_name; 
     // private $password; 
@@ -22,9 +23,6 @@ class ConnectionPDO {
         $this->pdo = new PDO($dsn, $user, $password, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
-        // $this->pdoTest = new PDO('mysql:dbname=testchat;host=127.0.0.1', 'root', '0123', [
-        //     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        // ]);
     }
 
     // insert user into table user
@@ -59,16 +57,9 @@ class ConnectionPDO {
         $query = $this->pdo->prepare("SELECT * FROM user WHERE $field = :field");
         
         $query->execute([':field' => $value]);
-        dump($query);
         $result = $query->fetchAll();
         // user not found => array vide
         return $result;
-        // if (empty($result)) {
-        //     return false;
-        // }
-        // else {
-        //     return true;
-        // }
     }
 
     public function updateStatus (string $field, string $value, string $status): bool 
@@ -84,40 +75,25 @@ class ConnectionPDO {
         else { return true; }
     }
 
-    // public function getUser(string $field, string $value) 
-    // {
-    //     $query = $this->pdo->prepare("SELECT * FROM user WHERE $field = :field");
-        
-    //     $r = $query->execute([":field" => $value]);
-    //     // dd($query);
-    //     $result = $query->fetchAll();
-    //     if (empty($result)) {
-    //         // http_response_code(400);
-    //         // throw new \PDOException("User not founded");
-    //         return [];
-    //     }
-    //     else {
-    //         return $result[0];
-    //     }
-    // }
-
     public function getAllUsersExceptOne(string $field, string $value):array 
     {
         $query = $this->pdo->prepare("SELECT * FROM user WHERE $field != :field ");
         $query->execute([":field" => $value]);
+
         return $query->fetchAll();
     }
 
-    public function deleteLastInsertUser () 
-    {
-        $id = $this->pdo->lastInsertId();
-        $query = $this->pdo->prepare("DELETE FROM user WHERE user_id = :id");
-        $result = $query->execute([":id" => $id]);
-        if ($result === true) {
-            return "User delete";
-        }
-        else { return 'User not been deleted' ;}
-    }
+    
+    // public function deleteLastInsertUser () 
+    // {
+    //     $id = $this->pdo->lastInsertId();
+    //     $query = $this->pdo->prepare("DELETE FROM user WHERE user_id = :id");
+    //     $result = $query->execute([":id" => $id]);
+    //     if ($result === true) {
+    //         return "User delete";
+    //     }
+    //     else { return 'User not been deleted' ;}
+    // }
 
     // public function logOut (string $field, string $value) 
     // {
