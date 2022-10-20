@@ -27,7 +27,7 @@ $userLogin = $users->user[0];
 $allUsers = $users->users;
 $response = $users->renderAllUser($allUsers);
 
-dump($_POST['searchUsers']);
+// dump($_POST['searchUsers']);
 
 ?>
 
@@ -74,13 +74,23 @@ dump($_POST['searchUsers']);
     let searchInput = document.getElementById('searchInput');
     let searchButton = document.getElementById('searchButton')
 
-    searchButton.addEventListener('click', function () {
-        let searchUser = searchInput.value;
+    searchButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        let searchUsers = searchInput.value;
+        console.log(searchUsers);
         fetch('/search', {
             method: 'POST',
             body: new URLSearchParams({
-                'searchUser' : searchUser.toString()
+                'searchUsers' : searchUsers
             })
+        })
+        .then(response => {
+            console.log(response);
+                return response.text()
+            
+        })
+        .then(body => {
+            usersList.innerHTML = body;
         })
     })
     

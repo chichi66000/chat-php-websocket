@@ -13,10 +13,15 @@ class Users {
         $this->user_value = $user_value;
         $this->user = (new ConnectionPDO)->checkIfUserExists($user_key, $user_value);
         $this->users = (new ConnectionPDO)->getAllUsersExceptOne($user_key, $user_value);
+        
     }
 
     public function renderAllUser (array $users) 
     {
+        if (empty($users)) {
+            return "No users found";
+        }
+        
         $html = "<div class='user-list d-flex justify-content-between flex-wrap'>";
         
         foreach($users as $user) {

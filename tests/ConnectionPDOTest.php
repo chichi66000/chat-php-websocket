@@ -57,6 +57,5 @@ final class ConnectionPDOTest extends TestCase {
     public function testGetSearchUsersExceptOneNull () {
         $q = $this->getPDO()->getSearchUsersExceptOne("to", '12465');
         $this->assertEmpty($q);
-        
     }
 }
