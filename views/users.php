@@ -146,7 +146,7 @@ $response = $users->renderAllUser($allUsers);
     function intervalListener () {self.setInterval(function () {
         updateUsersList();
         
-    }, 10000)
+    }, 2000000)
     }
     intervalListener()
     document.addEventListener('DOMContentLoaded', updateUsersList());

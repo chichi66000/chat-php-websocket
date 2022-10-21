@@ -104,3 +104,7 @@ else {
         <a href="<?= $router->url('signup') ?>" class="">Sign up</a>
     </div>
 </section>
+
+<script>
+    
+</script>

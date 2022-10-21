@@ -17,5 +17,6 @@ $router
     ->match('/users', 'users', 'users')
     ->get('/usersList', 'fetchAPI/usersList', 'usersList')
     ->post('/search', 'fetchAPI/searchUsers', 'search')
+    ->match('/chat/id=[i:id]', 'chat', 'chat')
     ->get('/error', 'NotFound', 'notfound')
     ->run();

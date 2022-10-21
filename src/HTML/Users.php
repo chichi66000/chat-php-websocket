@@ -1,6 +1,7 @@
 <?php
 namespace App\HTML;
 use App\ConnectionPDO;
+use App\Router;
 
 class Users {
     public $users;
@@ -21,12 +22,12 @@ class Users {
         if (empty($users)) {
             return "No users found";
         }
-        
+
         $html = "<div class='user-list d-flex justify-content-between flex-wrap'>";
         
         foreach($users as $user) {
             $class = $user['status'] === 'Online' ? 'bi bi-circle-fill text-success' : 'bi-circle-fill text-danger';
-            $html .= "<a href='' class='p-1 d-flex flex-wrap flex-row'>
+            $html .= "<a href= \"chat/id={$user['unique_id']} \" class='p-1 d-flex flex-wrap flex-row'>
                         <img src=\"{$user['file']}\" class='img img-fluid rounded-circle' alt='img profile' style=\"width:3rem; height: 3rem \">
                         <div>
                             <span>{$user['first_name']}  {$user['last_name']}</span>
