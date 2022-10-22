@@ -12,8 +12,8 @@ else {
     $unique_id = $_SESSION['unique_id'];
     $user = (new ConnectionPDO)->checkIfUserExists('unique_id', $unique_id)[0];
    
-    // $friend_id = explode('=', $_SERVER['REQUEST_URI'])[1];
-    // $friend = (new ConnectionPDO)->checkIfUserExists('unique_id', $friend_id)[0];
+    $friend_id = explode('=', $_SERVER['REQUEST_URI'])[1];
+    $friend = (new ConnectionPDO)->checkIfUserExists('unique_id', $friend_id)[0];
     // no user or no friend in table user => go back to users page
    
 }
@@ -54,7 +54,7 @@ else {
     <input type="text" class="form-control d-none" value="<?= $user['unique_id'] ?>" >
     <div class="input-group flex-nowrap ">
         <!-- <input type="text" name="message" class="form-control" placeholder="Enter your text here"> -->
-        <textarea class="form-control" name="message" id="message" placeholder="Enter your message here (max: 1000 characters)" maxlength="1000"  ></textarea>
+        <input type="text" class="form-control" name="message" id="message" placeholder="Enter your message here (max: 1000 characters)" maxlength="1000"  >
         <button class="btn btn-secondary " name="send" id="send" type="submit">
             <i class="bi bi-send input-group-text btn bg-info"></i>
         </button>
@@ -62,14 +62,14 @@ else {
     
 </form>
 
-<!-- <script>
+<script>
     var conn = new WebSocket('ws://localhost:8080');
     conn.onopen = function(e) {
         console.log("Connection established!");
     };
 
     conn.onmessage = function(e) {
-        // console.log(e.data);
+        console.log(e.data);
         let data = JSON.parse(e.data);
         let chatBox = document.getElementById('chat-box')
         // if (data.from === 'Me') {
@@ -92,12 +92,12 @@ else {
         if (data.from === 'Me') {
             divClass='outcome_message d-flex flex-row flex-wrap justify-content-end  my-1 p-1 mx-1';
             pClass='bg-success rounded text-right p-1 text-break';
-            imgChatUser.setAttribute('src', data.userImg);
+            imgChatUser.setAttribute('src', data.friendImg);
         }
         else {
             divClass='income_message d-flex flex-row flex-wrap justify-content-start  my-1 p-1 mx-1';
             pClass='bg-black text-white p-1 rounded text-break';
-            imgChatUser.setAttribute('src', data.friendImg);
+            imgChatUser.setAttribute('src', data.userImg);
 
         }
         // add new message in chat-box
@@ -165,4 +165,4 @@ else {
     })
 
 
-</script> -->
+</script>

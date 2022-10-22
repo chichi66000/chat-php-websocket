@@ -36,10 +36,12 @@ class Chat implements MessageComponentInterface {
         $userImg = $user['file'];
 
         $friend = (new ConnectionPDO)->checkIfUserExists('unique_id', $data['friendId'])[0];
+        dump($user, $friend);
         $friendName = $friend['first_name'] . ' ' . $friend['last_name'];
         $friendImg = $friend['file'];
         $data['dt'] = date('Y-m-d H:i:s');
         $data['friendName'] = $friendName;
+        $data['userName'] = $userName;
         $data['friendImg'] = $friendImg;
         $data['userImg'] = $userImg;
         foreach ($this->clients as $client) {
@@ -52,7 +54,7 @@ class Chat implements MessageComponentInterface {
                 $data['from'] = 'Me';
             }
             else {
-                $data['from'] = $friendName;
+                $data['from'] = $userName;
             }
             $client->send(json_encode($data));
         }
