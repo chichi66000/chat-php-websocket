@@ -20,3 +20,4 @@ $router
     ->match('/chat/id=[i:id]', 'chat', 'chat')
     ->get('/error', 'NotFound', 'notfound')
     ->run();
+
