@@ -1,7 +1,9 @@
 <?php
 namespace App;
-use Ratchet\MessageComponentInterface;
+use App\HTML\Users;
+use App\ConnectionPDO;
 use Ratchet\ConnectionInterface;
+use Ratchet\MessageComponentInterface;
 
 class Chat implements MessageComponentInterface {
     protected $clients;
@@ -22,11 +24,37 @@ class Chat implements MessageComponentInterface {
         echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
             , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
 
+        /**
+         * @ $msg 
+         */
+        
+            // convert into array the $msg
+        $data = json_decode($msg, true);
+        // get inf user et friend from PDO
+        $user = (new ConnectionPDO)->checkIfUserExists('unique_id', $data['userId'])[0];
+        $userName = $user['first_name'] . ' ' . $user['last_name'];
+        $userImg = $user['file'];
+
+        $friend = (new ConnectionPDO)->checkIfUserExists('unique_id', $data['friendId'])[0];
+        $friendName = $friend['first_name'] . ' ' . $friend['last_name'];
+        $friendImg = $friend['file'];
+        $data['dt'] = date('Y-m-d H:i:s');
+        $data['friendName'] = $friendName;
+        $data['friendImg'] = $friendImg;
+        $data['userImg'] = $userImg;
         foreach ($this->clients as $client) {
-            if ($from !== $client) {
-                // The sender is not the receiver, send to each client connected
-                $client->send($msg);
+            // if ($from !== $client) {
+            //     // The sender is not the receiver, send to each client connected
+            //     $client->send($msg);
+            // }
+            // show msg upon sender or receiver
+            if ($from === $client) {
+                $data['from'] = 'Me';
             }
+            else {
+                $data['from'] = $friendName;
+            }
+            $client->send(json_encode($data));
         }
     }
 

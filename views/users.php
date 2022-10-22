@@ -20,12 +20,18 @@ session_start();
 //     dump($users);
 
 // }
+dump($_SESSION['unique_id']);
+if (isset($_SESSION['unique_id'])) {
+    $unique_id = $_SESSION['unique_id'];
+    $users = new Users('unique_id', $unique_id);
+    $userLogin = $users->user[0];
+    $allUsers = $users->users;
+    $response = $users->renderAllUser($allUsers);
+}
+else {
+    header('Location: ' . $router->url('login'));
+}
 
-$unique_id = $_SESSION['unique_id'];
-$users = new Users('unique_id', $unique_id);
-$userLogin = $users->user[0];
-$allUsers = $users->users;
-$response = $users->renderAllUser($allUsers);
 
 // dump($_POST['searchUsers']);
 
@@ -146,7 +152,7 @@ $response = $users->renderAllUser($allUsers);
     function intervalListener () {self.setInterval(function () {
         updateUsersList();
         
-    }, 2000000)
+    }, 20000000)
     }
     intervalListener()
     document.addEventListener('DOMContentLoaded', updateUsersList());

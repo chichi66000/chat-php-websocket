@@ -3,24 +3,19 @@ session_start();
 
 use App\Form;
 use App\ConnectionPDO;
+dump($_SESSION['unique_id']);
 
 if (!isset($_SESSION['unique_id'])) {
     header('Location: ' . $router->url('users'));
 }
 else {
     $unique_id = $_SESSION['unique_id'];
-    $friend_id = explode('=', $_SERVER['REQUEST_URI'])[1];
     $user = (new ConnectionPDO)->checkIfUserExists('unique_id', $unique_id)[0];
-    $friend = (new ConnectionPDO)->checkIfUserExists('unique_id', $friend_id)[0];
+   
+    // $friend_id = explode('=', $_SERVER['REQUEST_URI'])[1];
+    // $friend = (new ConnectionPDO)->checkIfUserExists('unique_id', $friend_id)[0];
     // no user or no friend in table user => go back to users page
-    if (empty($user) || empty($friend)) {
-        header('Location: ' . $router->url('users'));
-    }
-    // continue to chat
-    else 
-    {
-
-    }
+   
 }
 
 
@@ -67,7 +62,7 @@ else {
     
 </form>
 
-<script>
+<!-- <script>
     var conn = new WebSocket('ws://localhost:8080');
     conn.onopen = function(e) {
         console.log("Connection established!");
@@ -76,24 +71,62 @@ else {
     conn.onmessage = function(e) {
         // console.log(e.data);
         let data = JSON.parse(e.data);
-        console.log("msg ", data);
-        // add new message in chat-box
+        let chatBox = document.getElementById('chat-box')
+        // if (data.from === 'Me') {
+        //     row_class = "row justify-content-start";
+        //     background_class="text-dark alert-light";
+        // } else {
+        //     row_class = "row justify-content-end";
+        //     background_class="alert-success";
+        // }
+        // chatBox.append(htmlData);
+        
         let divChatUser = document.createElement('div');
-        divChatUser.setAttribute('class', 'outcome_message d-flex flex-row flex-wrap justify-content-end  my-1 p-1 mx-1');
         let pChatUser = document.createElement('p');
-        pChatUser.setAttribute('class', 'bg-success rounded text-right p-1 text-break');
-        pChatUser.setAttribute('style', "width: 50%");
-        pChatUser.innerHTML = data.msg;
         let imgChatUser = document.createElement('img');
-        imgChatUser.setAttribute('src', "");
+        let spanChat = document.createElement('span');
+        let fromChat = document.createElement('span');
+        let pClass = "";
+        let divClass = "";
+        // console.log("msg ", data);
+        if (data.from === 'Me') {
+            divClass='outcome_message d-flex flex-row flex-wrap justify-content-end  my-1 p-1 mx-1';
+            pClass='bg-success rounded text-right p-1 text-break';
+            imgChatUser.setAttribute('src', data.userImg);
+        }
+        else {
+            divClass='income_message d-flex flex-row flex-wrap justify-content-start  my-1 p-1 mx-1';
+            pClass='bg-black text-white p-1 rounded text-break';
+            imgChatUser.setAttribute('src', data.friendImg);
+
+        }
+        // add new message in chat-box
+        divChatUser.setAttribute('class', divClass);
+
+        pChatUser.setAttribute('class', pClass);
+        pChatUser.setAttribute('style', "width: 50%");
+        pChatUser.innerHTML = data.msg + "<br>";
+
+        spanChat.setAttribute('class', 'text-light fst-italic');
+        spanChat.setAttribute('style', 'font-size: 0.5rem');
+
+        spanChat.innerHTML = data.dt;
+
         imgChatUser.setAttribute('alt', "image profile");
-        imgChatUser.setAttribute('class', 'img rounded-circle img-fluid ps-1');
+        imgChatUser.setAttribute('class', 'img rounded-circle img-fluid p-1');
         imgChatUser.setAttribute('style', "width: 2rem; height: 2rem");
+        
+
+        fromChat.innerHTML = data.from;
+
+
+        pChatUser.appendChild(spanChat);
         divChatUser.appendChild(pChatUser);
         divChatUser.appendChild(imgChatUser);
-        // let divChatUser = "<div class='outcome_message d-flex flex-row flex-wrap justify-content-end  my-1 p-1 mx-1'><p class='bg-success rounded text-right p-1 text-break'>"+data.msg+"</p></p><img  /></div>"
-        let chatBox = document.getElementById('chat-box');
+        divChatUser.appendChild(fromChat);
         chatBox.appendChild(divChatUser);
+        // let divChatUser = "<div class='outcome_message d-flex flex-row flex-wrap justify-content-end  my-1 p-1 mx-1'><p class='bg-success rounded text-right p-1 text-break'>"+data.msg+"</p></p><img  /></div>"
+        
     };
 
     // sanitizer textarea 
@@ -122,9 +155,9 @@ else {
             let friendId = <?php echo $friend_id; ?>;
             let msg = htmlEntities(message.value);
             let data = {
-                userId: userId,
-                friendId: friendId,
-                msg: msg,
+                'userId': userId,
+                'friendId': friendId,
+                'msg': msg,
             }
             // send data via websocket connection
             conn.send(JSON.stringify(data));
@@ -132,4 +165,4 @@ else {
     })
 
 
-</script>
+</script> -->
