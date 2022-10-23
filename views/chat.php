@@ -72,18 +72,10 @@ else {
         console.log(e.data);
         let data = JSON.parse(e.data);
         let chatBox = document.getElementById('chat-box')
-        // if (data.from === 'Me') {
-        //     row_class = "row justify-content-start";
-        //     background_class="text-dark alert-light";
-        // } else {
-        //     row_class = "row justify-content-end";
-        //     background_class="alert-success";
-        // }
-        // chatBox.append(htmlData);
         
         let divChatUser = document.createElement('div');
         let pChatUser = document.createElement('p');
-        let imgChatUser = document.createElement('img');
+        // let imgChatUser = document.createElement('img');
         let spanChat = document.createElement('span');
         let fromChat = document.createElement('span');
         let pClass = "";
@@ -92,12 +84,12 @@ else {
         if (data.from === 'Me') {
             divClass='outcome_message d-flex flex-row flex-wrap justify-content-end  my-1 p-1 mx-1';
             pClass='bg-success rounded text-right p-1 text-break';
-            imgChatUser.setAttribute('src', data.friendImg);
+            // imgChatUser.setAttribute('src', data.friendImg);
         }
         else {
             divClass='income_message d-flex flex-row flex-wrap justify-content-start  my-1 p-1 mx-1';
             pClass='bg-black text-white p-1 rounded text-break';
-            imgChatUser.setAttribute('src', data.userImg);
+            // imgChatUser.setAttribute('src', data.userImg);
 
         }
         // add new message in chat-box
@@ -112,20 +104,17 @@ else {
 
         spanChat.innerHTML = data.dt;
 
-        imgChatUser.setAttribute('alt', "image profile");
-        imgChatUser.setAttribute('class', 'img rounded-circle img-fluid p-1');
-        imgChatUser.setAttribute('style', "width: 2rem; height: 2rem");
-        
+        // imgChatUser.setAttribute('alt', "image profile");
+        // imgChatUser.setAttribute('class', 'img rounded-circle img-fluid p-1');
+        // imgChatUser.setAttribute('style', "width: 2rem; height: 2rem");
+        // imgChatUser.setAttribute('src', data.img);
 
         fromChat.innerHTML = data.from;
-
-
         pChatUser.appendChild(spanChat);
         divChatUser.appendChild(pChatUser);
-        divChatUser.appendChild(imgChatUser);
+        // divChatUser.appendChild(imgChatUser);
         divChatUser.appendChild(fromChat);
         chatBox.appendChild(divChatUser);
-        // let divChatUser = "<div class='outcome_message d-flex flex-row flex-wrap justify-content-end  my-1 p-1 mx-1'><p class='bg-success rounded text-right p-1 text-break'>"+data.msg+"</p></p><img  /></div>"
         
     };
 

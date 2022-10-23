@@ -3,7 +3,7 @@ namespace App;
 
 use PDO;
 
-class ConnectionPDO {
+class ConnectionPDO extends \PDO{
     private $pdo;
     // private $pdoTest;
 
@@ -93,6 +93,8 @@ class ConnectionPDO {
         $result = $query->fetchAll();
         return $result;
     }
+
+    
     
     // public function deleteLastInsertUser () 
     // {
