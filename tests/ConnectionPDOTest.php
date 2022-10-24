@@ -59,5 +59,4 @@ final class ConnectionPDOTest extends TestCase {
         $this->assertEmpty($q);
     }
 
-    
 }

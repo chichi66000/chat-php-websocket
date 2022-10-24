@@ -94,35 +94,14 @@ class ConnectionPDO extends \PDO{
         return $result;
     }
 
-    
-    
-    // public function deleteLastInsertUser () 
-    // {
-    //     $id = $this->pdo->lastInsertId();
-    //     $query = $this->pdo->prepare("DELETE FROM user WHERE user_id = :id");
-    //     $result = $query->execute([":id" => $id]);
-    //     if ($result === true) {
-    //         return "User delete";
-    //     }
-    //     else { return 'User not been deleted' ;}
-    // }
-
-    // public function logOut (string $field, string $value) 
-    // {
-    //     $query = $this->pdo->prepare("SELECT status FROM user WHERE $field = ? ");
-    //     $query->execute([$field => $value]);
-    //     $result = $query->fetchAll(PDO::FETCH_ASSOC);
-        
-    //     if (!empty($result)) {
-    //         // changer le status du user => Offline 
-    //         // $status = "Offline";
-    //         // $this->updateStatus($field, $value, $status);
-    //         // http_response_code('200');
-    //         return true;
-    //     }
-    //     else {
-    //         // http_response_code(400);
-    //         // throw new \PDOException("User not founded");
-    //     }
-    // }
+    public function updateUserConnectionId (string $user_connection_id, string $unique_id): bool
+    {
+        $q = "UPDATE user SET user_connection_id = :user_connection_id WHERE unique_id = :unique_id";
+        $statement = $this->pdo->prepare($q);
+        $result = $statement->execute([
+        ":user_connection_id" => $user_connection_id, 
+        "unique_id" => $unique_id
+        ]);
+        return $result;
+    }
 }

@@ -46,6 +46,7 @@ else {
                 // update status = Online; login to page Users
                 $status = "Online";
                 $pdo->updateStatus('email', $email, $status);
+                
                 http_response_code(200);
                 session_start();
                 $_SESSION['unique_id'] = $user['unique_id'];

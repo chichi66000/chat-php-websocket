@@ -66,7 +66,7 @@ else {
 </form>
 
 <script>
-    var conn = new WebSocket('ws://localhost:8080');
+    var conn = new WebSocket('ws://localhost:8080?sender=<?php echo $unique_id?>');
     conn.onopen = function(e) {
         console.log("Connection established!");
     };
