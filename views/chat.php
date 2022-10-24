@@ -16,8 +16,8 @@ else {
     $friend_id = explode('=', $_SERVER['REQUEST_URI'])[1];
     $friend = (new ConnectionPDO)->checkIfUserExists('unique_id', $friend_id)[0];
     // no user or no friend in table user => go back to users page
-    // $chat_object = new ChatRoom($unique_id, $friend_id, );
-    // $chat_data = $chat_object->get_all_chat_data();
+    $chat_object = new ChatRoom;
+    $chat_data = $chat_object->get_all_chat_data($unique_id, $friend_id);
     // dump($chat_data);
 }
 
@@ -40,15 +40,23 @@ else {
 </header>
 
 <div id="chat-box" class="my-2 mx-auto col p-2 col-md-6 col-lg-5 border border-1 bg-white overflow-auto">
-    <!-- <div class="income_message d-flex flex-row flex-wrap justify-content-start my-1 mx-1 ">
-        <img class="img rounded-circle img-fluid pe-1" style="width: 2rem; height: 2rem" alt="" src="2977.jpg" />
-        <p class="bg-black text-white p-1 rounded text-break" style="width: 50%;">Loremmm mem em Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure quis atque nisi deleniti pariatur, quibusdam corporis, eveniet enim excepturi quae vero provident earum placeat soluta? At ea eos velit repudiandae?</p>
-    </div>
-
-    <div class="outcome_message d-flex flex-row flex-wrap justify-content-end  my-1 p-1 mx-1 ">
-        <p class="bg-success rounded text-right p-1 text-break" style="width: 50%;">Loremmm mem em Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quis magnam, asperiores voluptatem aliquam architecto, maiores optio praesentium perspiciatis eligendi dolore blanditiis reiciendis sed id dolorem repellendus, quas officia qui recusandae!</p>
-        <img class="img rounded-circle img-fluid ps-1" style="width: 2rem; height: 2rem" alt="" src="2977.jpg" />
-    </div> -->
+    <?php foreach ($chat_data as $chat): ?>
+        <?php if ($chat['from_user_id'] == $unique_id): ?>
+            <div class="outcome_message d-flex flex-row flex-wrap justify-content-end  my-1 p-1 mx-1 ">
+                <p class="rounded text-right p-1 text-break bg-success" style="width: 50%;"><?= $chat['message'] ?> <br>
+                <span class="text-light fst-italic" style="font-size: 0.5rem"><?= $chat['created_on']?></span>
+            </p>
+            <img class="img rounded-circle img-fluid p-1 m-1" style="width: 2rem; height: 2rem" alt="" src="<?=$user['file'] ?>" />
+            </div>
+        <?php else : ?>
+            <div class="income_message d-flex flex-row flex-wrap justify-content-start  my-1 p-1 mx-1 ">
+                <img class="img rounded-circle img-fluid p-1 m-1" style="width: 2rem; height: 2rem" alt="" src="<?=$friend['file'] ?>" />
+                <p class="bg-black text-white p-1 rounded text-break" style="width: 50%;"><?= $chat['message'] ?><br>
+                    <span class="text-light fst-italic" style="font-size: 0.5rem"><?= $chat['created_on']?></span>
+                </p>
+            </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
 </div>
     
 <form id="form" class="form-group mx-auto col p-2 col-md-6 col-lg-5 border border-1 bg-white " action="" method="post">
@@ -66,19 +74,28 @@ else {
 </form>
 
 <script>
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     chatBox = document.getElementById('chat-box');
+    //     // chatBox.scrollTop(chatBox[0].scrollHeight);
+    //     chatBox.scrollTop = chatBox.scrollHeight;
+
+    // })
+
     var conn = new WebSocket('ws://localhost:8080?sender=<?php echo $unique_id?>');
     conn.onopen = function(e) {
         console.log("Connection established!");
     };
 
     conn.onmessage = function(e) {
+        
         console.log(e.data);
         let data = JSON.parse(e.data);
         let chatBox = document.getElementById('chat-box')
+        chatBox.scrollTop = chatBox.scrollHeight;
         
         let divChatUser = document.createElement('div');
         let pChatUser = document.createElement('p');
-        // let imgChatUser = document.createElement('img');
+        let imgChatUser = document.createElement('img');
         let spanChat = document.createElement('span');
         let fromChat = document.createElement('span');
         let pClass = "";
@@ -87,12 +104,12 @@ else {
         if (data.from === 'Me') {
             divClass='outcome_message d-flex flex-row flex-wrap justify-content-end  my-1 p-1 mx-1';
             pClass='bg-success rounded text-right p-1 text-break';
-            // imgChatUser.setAttribute('src', data.friendImg);
+            // imgChatUser.setAttribute('src', data.senderImg);
         }
         else {
             divClass='income_message d-flex flex-row flex-wrap justify-content-start  my-1 p-1 mx-1';
             pClass='bg-black text-white p-1 rounded text-break';
-            // imgChatUser.setAttribute('src', data.userImg);
+            // imgChatUser.setAttribute('src', data.receiverImg);
 
         }
         // add new message in chat-box
@@ -107,18 +124,23 @@ else {
 
         spanChat.innerHTML = data.dt;
 
-        // imgChatUser.setAttribute('alt', "image profile");
-        // imgChatUser.setAttribute('class', 'img rounded-circle img-fluid p-1');
-        // imgChatUser.setAttribute('style', "width: 2rem; height: 2rem");
+        imgChatUser.setAttribute('src', data.senderImg);
+
+        imgChatUser.setAttribute('alt', "image profile");
+        imgChatUser.setAttribute('class', 'img rounded-circle img-fluid p-1');
+        imgChatUser.setAttribute('style', "width: 2rem; height: 2rem");
         // imgChatUser.setAttribute('src', data.img);
 
         fromChat.innerHTML = data.from;
         pChatUser.appendChild(spanChat);
         divChatUser.appendChild(pChatUser);
-        // divChatUser.appendChild(imgChatUser);
+        divChatUser.appendChild(imgChatUser);
         divChatUser.appendChild(fromChat);
         chatBox.appendChild(divChatUser);
         
+        // scroll to end of chat-box
+        chatBox.scrollTop = chatBox.scrollHeight;
+
     };
 
     // sanitizer textarea 
@@ -153,8 +175,10 @@ else {
             }
             // send data via websocket connection
             conn.send(JSON.stringify(data));
+            message.value = "";
         }
     })
+
 
 
 </script>

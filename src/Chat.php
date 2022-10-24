@@ -44,20 +44,15 @@ class Chat implements MessageComponentInterface {
         $message = $data['msg'];
         $created_on = date('Y-m-d H:i:s');
         $status = 'Yes';
-        // connecte to database
-        $chat_object = new ChatRoom($userId, $receiverId, $message, $created_on, $status);
-        
-        // dd($chat_object->receiverId);
-        // save info of message to database
-        // $id = $chat_object->setUserId($data['userId']);
-        // dd($id);
-        // $chat_object->setReceiverId($data['friendId']);
-        // $chat_object->setMessage($data['msg']);
-        // $chat_object->setCreatedOn(date('Y-m-d H:i:s'));
-        // $chat_object->setStatus('Yes');
-        // dd($chat_object->getMessage());
-        $chat_message_id = $chat_object->saveChat($userId, $receiverId, $message, $created_on, $status);
 
+        // connecte to database
+        $chat_object = new ChatRoom;
+        $chat_object->setUserId($userId);
+        $chat_object->setReceiverId($receiverId);
+        $chat_object->setMessage($message);
+        $chat_object->setCreatedOn($created_on);
+        $chat_object->setStatus($status);
+        $chat_message_id = $chat_object->saveChat();
 
         // get info of user from table user
         // get info of receiver from table user
@@ -75,13 +70,7 @@ class Chat implements MessageComponentInterface {
         $data['senderImg'] = $senderImg;
         $data['receiverImg'] = $receiverImg;
         $data['receiver'] = $receiverName;
-        // $friendName = $friend['first_name'] . ' ' . $friend['last_name'];
-        // $friendImg = $friend['file'];
 
-        // $data['friendName'] = $friendName;
-        // $data['userName'] = $userName;
-        // $data['friendImg'] = $friendImg;
-        // $data['userImg'] = $userImg;
         foreach ($this->clients as $client) {
             // if ($from !== $client) {
             //     // The sender is not the receiver, send to each client connected
@@ -90,11 +79,9 @@ class Chat implements MessageComponentInterface {
             // show msg upon sender or receiver
             if ($from === $client) {
                 $data['from'] = 'Me';
-                // $data['img'] = $userImg;
             }
             else {
                 $data['from'] = $sender_userName;
-                // $data['img'] = $friendImg;
             }
             
             // check if receiver is connected?

@@ -19,15 +19,11 @@ class ChatRoom {
     //     ]);
     // }
 
-    public function __construct ($userId, $receiverId, $message, $created_on, $status) {
+    public function __construct () {
         $this->pdo = new PDO('mysql:dbname=chat;host=127.0.0.1', 'root', '0123', [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
-        $this->userId = $userId;
-        $this->message = $message;
-        $this->created_on = $created_on;
-        $this->receiverId = $receiverId;
-        $this->status = $status;
+        
     }
 
     public function setChatId ($chat_id) 
@@ -40,61 +36,61 @@ class ChatRoom {
         return $this->chat_id;
     }
 
-    // public function setReceiverId ($receiverId) 
-    // {
-    //     $this->receiverId = $receiverId;
-    // }
+    public function setReceiverId ($receiverId) 
+    {
+        $this->receiverId = $receiverId;
+    }
 
-    // public function getReceiverId () 
-    // {
-    //     return $this->receiverId;
-    // }
+    public function getReceiverId () 
+    {
+        return $this->receiverId;
+    }
 
-    // public function setUserId ($userId) 
-    // {
-    //     $this->userId = $userId;
-    //     // return dump($this->userId);
-    // }
+    public function setUserId ($userId) 
+    {
+        $this->userId = $userId;
+        // return dump($this->userId);
+    }
 
-    // public function getUserId () 
-    // {
-    //     return $this->userId;
-    // }
+    public function getUserId () 
+    {
+        return $this->userId;
+    }
 
-    // public function setMessage ($message) 
-    // {
-    //     $this->message = $message;
-    // }
+    public function setMessage ($message) 
+    {
+        $this->message = $message;
+    }
 
-    // public function getMessage () 
-    // {
-    //     return $this->message;
-    // }
+    public function getMessage () 
+    {
+        return $this->message;
+    }
 
-    // public function setCreatedOn ($createdOn) 
-    // {
-    //     $this->created_on =$createdOn;
-    // }
+    public function setCreatedOn ($createdOn) 
+    {
+        $this->created_on =$createdOn;
+    }
 
-    // public function getCreatedOn () 
-    // {
-    //     return $this->created_on;
-    // }
+    public function getCreatedOn () 
+    {
+        return $this->created_on;
+    }
 
     public function setStatus ($status) 
     {
         $this->status = $status;
     }
 
-    public function saveChat ($userId, $receiverId, $message, $created_on, $status) 
+    public function saveChat () 
     {
         $statement = $this->pdo->prepare("INSERT INTO messages (from_user_id, to_user_id, message, created_on, status) VALUES (:from_user_id, :to_user_id, :message, :created_on, :status) ");
         $statement->execute([
-            ':from_user_id' => $userId,
-            ':to_user_id' => $receiverId,
-            ':message'=> $message,
-            ':created_on'=> $created_on,
-            ':status'=> $status
+            ':from_user_id' => $this->userId,
+            ':to_user_id' => $this->receiverId,
+            ':message'=> $this->message,
+            ':created_on'=> $this->created_on,
+            ':status'=> $this->status
         ]);
 
         return $this->pdo->lastInsertId();
@@ -108,16 +104,21 @@ class ChatRoom {
             ":chat_id" => $this->chat_id
         ]);
     }
-    // public function get_all_chat_data () 
-    // {
-    //     $query = "SELECT * FROM messages 
-    //                 INNER JOIN user 
-    //                 ON messages.from_user_id = user.unique_id OR messages.to_user_id = user.unique_id
-    //                 ORDER BY messages.chat_id ASC ";
-    //     $statement = $this->connect->prepare($query);
-    //     $statement->execute([]);
-    //     return $statement->fetchAll(PDO::FETCH_ASSOC);
-    // }
+
+    public function get_all_chat_data ($userId, $receiverId)  
+    {
+        $query = "SELECT * FROM messages 
+                    INNER JOIN user a
+                        ON messages.from_user_id = a.unique_id 
+                    INNER JOIN user b
+                        ON  messages.to_user_id = b.unique_id
+                    WHERE (messages.from_user_id = $userId AND messages.to_user_id = $receiverId) 
+                        OR (messages.from_user_id = $receiverId AND messages.to_user_id = $userId)
+                    ORDER BY messages.chat_id ASC ";
+        $statement = $this->pdo->prepare($query);
+        $statement->execute([]);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     // public function get_user_all_data_with_status_count () {
     //     $query = "SELECT unique_id, first_name, last_name, file, status, 
