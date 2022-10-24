@@ -52,3 +52,47 @@
                 </div>
             </div>
         <?php endforeach; ?>
+
+
+<?php
+// ChatRoom class
+function setUserToken ($userToken) {
+    $this->userToken = $userToken;
+}
+function setUserConnectionID ($user_connection_id) {
+    $this->user_connection_id = $user_connection_id;
+}
+function getUserToken() { return $this->userToken; }
+
+function getUserConnectionID() { return $this->user_connection_id; }
+
+function update_user_connection_id () {
+    $q = "UPDATE chat_user_table SET user_connection_id = :user_connection_id WHERE user_token = :user_token";
+    $statement = $this->connect->prepare($q);
+    $statement->execute([
+        ":user_connection_id" => $this->user_connection_id, 
+        "user_token" => $this->user_token
+    ]);
+}
+// après login=> generate unique connection string
+$user_token = md5($unique_id);
+
+// update user_token value into table user after Login
+// user this token in websocket connection: ex: ws://localhost:8080?$token=....
+// in Chat ->onOpen
+public function onOpen(ConnectionInterface $conn) {
+    // Store the new connection to send messages to later
+    $this->clients->attach($conn);
+
+    /**
+     * add this line to set user_connection_id into table user when there is a chat
+     */
+    $queryString = $connect->httpRequest->getUri()->getQuery();
+    parse_str($queryString, $queryarray);
+    $user_object = new \ChatUser;
+    $user_object->setUserToken($querryarray['token']);
+    $user_object->setUserConnectionId($conn->resourceId);
+    $user_object->update_user_connection_id();
+
+    echo "New connection! ({$conn->resourceId})\n";
+}

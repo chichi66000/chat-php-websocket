@@ -2,6 +2,7 @@
 session_start();
 
 use App\Form;
+use App\ChatRoom;
 use App\ConnectionPDO;
 dump($_SESSION['unique_id']);
 
@@ -15,7 +16,9 @@ else {
     $friend_id = explode('=', $_SERVER['REQUEST_URI'])[1];
     $friend = (new ConnectionPDO)->checkIfUserExists('unique_id', $friend_id)[0];
     // no user or no friend in table user => go back to users page
-   
+    // $chat_object = new ChatRoom($unique_id, $friend_id, );
+    // $chat_data = $chat_object->get_all_chat_data();
+    // dump($chat_data);
 }
 
 

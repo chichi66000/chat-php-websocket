@@ -33,21 +33,36 @@ class Chat implements MessageComponentInterface {
         // convert into array the $msg
         $data = json_decode($msg, true);
 
-        // connecte to databas
-        $chat_object = new ChatRoom;
+        $userId = $data['userId'];
+        $receiverId = $data['friendId'];
+        $message = $data['msg'];
+        $created_on = date('Y-m-d H:i:s');
+        $status = 'Yes';
+        // connecte to database
+        $chat_object = new ChatRoom($userId, $receiverId, $message, $created_on, $status);
+        
+        // dd($chat_object->receiverId);
         // save info of message to database
-        $chat_object->setUserId($data['userId']);
-        $chat_object->setMessage($data['msg']);
-        $chat_object->setCreatedOn(date('Y-m-d H:i:s'));
-        $chat_object->saveChat();
+        // $id = $chat_object->setUserId($data['userId']);
+        // dd($id);
+        // $chat_object->setReceiverId($data['friendId']);
+        // $chat_object->setMessage($data['msg']);
+        // $chat_object->setCreatedOn(date('Y-m-d H:i:s'));
+        // $chat_object->setStatus('Yes');
+        // dd($chat_object->getMessage());
+        $chat_message_id = $chat_object->saveChat($userId, $receiverId, $message, $created_on, $status);
 
-        // get info user et friend from PDO
-        $user = (new ConnectionPDO)->checkIfUserExists('unique_id', $data['userId'])[0];
-        $userName = $user['first_name'] . ' ' . $user['last_name'];
+
+        // get info of user from table user
+        // get info of receiver from table user
+
+        $sender = (new ConnectionPDO)->checkIfUserExists('unique_id', $data['userId'])[0];
+        $sender_userName = $sender['first_name'] . ' ' . $sender['last_name'];
+        $senderImg = $sender['file'];
+        
+        $receiver = (new ConnectionPDO)->checkIfUserExists('unique_id', $data['friendId'])[0];
         $data['dt'] = date('Y-m-d H:i:s');
-        // $userImg = $user['file'];
 
-        // $friend = (new ConnectionPDO)->checkIfUserExists('unique_id', $data['friendId'])[0];
         // $friendName = $friend['first_name'] . ' ' . $friend['last_name'];
         // $friendImg = $friend['file'];
 
@@ -66,11 +81,15 @@ class Chat implements MessageComponentInterface {
                 // $data['img'] = $userImg;
             }
             else {
-                $data['from'] = $userName;
+                $data['from'] = $sender_userName;
                 // $data['img'] = $friendImg;
 
             }
             $client->send(json_encode($data));
+
+            // check connection id
+            dd("clien " , $client->resourceId);
+            
         }
     }
 
