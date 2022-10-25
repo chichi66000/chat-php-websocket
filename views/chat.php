@@ -74,13 +74,14 @@ else {
 </form>
 
 <script>
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     chatBox = document.getElementById('chat-box');
-    //     // chatBox.scrollTop(chatBox[0].scrollHeight);
-    //     chatBox.scrollTop = chatBox.scrollHeight;
+    document.addEventListener('DOMContentLoaded', function () {
+        messageForm = document.getElementById('message');
+        // chatBox.scrollTop(chatBox[0].scrollHeight);
+    // chatBox.scrollTop = chatBox.scrollHeight;
+        messageForm.scrollIntoView({ behavior: 'smooth', block: 'end' });
 
-    // })
-
+    })
+    
     var conn = new WebSocket('ws://localhost:8080?sender=<?php echo $unique_id?>');
     conn.onopen = function(e) {
         console.log("Connection established!");
@@ -91,7 +92,7 @@ else {
         console.log(e.data);
         let data = JSON.parse(e.data);
         let chatBox = document.getElementById('chat-box')
-        chatBox.scrollTop = chatBox.scrollHeight;
+        // chatBox.scrollTop = chatBox.scrollHeight;
         
         let divChatUser = document.createElement('div');
         let pChatUser = document.createElement('p');
@@ -138,9 +139,11 @@ else {
         divChatUser.appendChild(fromChat);
         chatBox.appendChild(divChatUser);
         
-        // scroll to end of chat-box
-        chatBox.scrollTop = chatBox.scrollHeight;
+        messageForm.scrollIntoView({ behavior: 'smooth', block: 'end' });
 
+        // scroll to end of chat-box
+        // chatBox.scrollTop = chatBox.scrollHeight;
+        // chatBox.scrollIntoView({ behavior: 'smooth', block: 'end' });
     };
 
     // sanitizer textarea 
