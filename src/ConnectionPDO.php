@@ -18,13 +18,17 @@ class ConnectionPDO extends \PDO{
     // private $email;
     // private $created_at; 
 
-    public function __construct ($dsn='mysql:dbname=chat;host=127.0.0.1', $user='root', $password='0123') 
-    {
-        $this->pdo = new PDO($dsn, $user, $password, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ]);
-    }
+    // public function __construct ($dsn='mysql:dbname=chat;host=127.0.0.1', $user='root', $password='0123') 
+    // {
+    //     $this->pdo = new PDO($dsn, $user, $password, [
+    //         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    //     ]);
+    // }
 
+    public function __construct (PDO $pdo) {
+        $this->pdo = $pdo;
+    }
+    
     // insert user into table user
     public function insertUser (string $unique_id, string $firstName, string $lastName, string $email, string $password,string $file, string $status, string $created_at): bool 
     {

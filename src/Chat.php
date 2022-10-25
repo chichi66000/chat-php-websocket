@@ -1,6 +1,7 @@
 <?php
 namespace App;
 use App\ChatRoom;
+use App\Connection;
 use App\HTML\Users;
 use App\ConnectionPDO;
 use Ratchet\ConnectionInterface;
@@ -21,7 +22,8 @@ class Chat implements MessageComponentInterface {
         // save user_connection_id
         $queryString = $conn->httpRequest->getUri()->getQuery();
         parse_str($queryString, $queryarray);
-        $user_object = new ConnectionPDO;
+        $pdo = Connection::getPDO();
+        $user_object = new ConnectionPDO($pdo);
         $user_object->updateUserConnectionId($conn->resourceId, $queryarray['sender'] );
 
         echo "New connection! ({$conn->resourceId})\n";
@@ -41,12 +43,16 @@ class Chat implements MessageComponentInterface {
 
         $userId = $data['userId'];
         $receiverId = $data['friendId'];
-        $message = $data['msg'];
+        dump($data['msg']);
+        $message = urldecode($data['msg']);
+        dump($message);
         $created_on = date('Y-m-d H:i:s');
         $status = 'Yes';
 
         // connecte to database
-        $chat_object = new ChatRoom;
+        $pdo = Connection::getPDO();
+
+        $chat_object = new ChatRoom($pdo);
         $chat_object->setUserId($userId);
         $chat_object->setReceiverId($receiverId);
         $chat_object->setMessage($message);
@@ -56,12 +62,11 @@ class Chat implements MessageComponentInterface {
 
         // get info of user from table user
         // get info of receiver from table user
-
-        $sender = (new ConnectionPDO)->checkIfUserExists('unique_id', $data['userId'])[0];
+        $sender = (new ConnectionPDO($pdo))->checkIfUserExists('unique_id', $data['userId'])[0];
         $sender_userName = $sender['first_name'] . ' ' . $sender['last_name'];
         $senderImg = $sender['file'];
         
-        $receiver = (new ConnectionPDO)->checkIfUserExists('unique_id', $data['friendId'])[0];
+        $receiver = (new ConnectionPDO($pdo))->checkIfUserExists('unique_id', $data['friendId'])[0];
         $receiverName = $receiver['first_name'] . ' ' . $receiver['last_name'];
         $receiver_user_connction_id = $receiver['user_connection_id'];
         $receiverImg = $receiver['file'];

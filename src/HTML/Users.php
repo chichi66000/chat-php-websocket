@@ -9,12 +9,11 @@ class Users {
     public $user_key;
     public $user_value;
 
-    public function __construct(string $user_key, string $user_value) {
+    public function __construct(string $user_key, string $user_value, $pdo) {
         $this->user_key = $user_key;
         $this->user_value = $user_value;
-        $this->user = (new ConnectionPDO)->checkIfUserExists($user_key, $user_value);
-        $this->users = (new ConnectionPDO)->getAllUsersExceptOne($user_key, $user_value);
-        
+        $this->user = (new ConnectionPDO($pdo))->checkIfUserExists($user_key, $user_value);
+        $this->users = (new ConnectionPDO($pdo))->getAllUsersExceptOne($user_key, $user_value);
     }
 
     public function renderAllUser (array $users) 

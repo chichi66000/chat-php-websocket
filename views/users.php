@@ -1,7 +1,8 @@
 <?php
 
-use App\ConnectionPDO;
+use App\Connection;
 use App\HTML\Users;
+use App\ConnectionPDO;
 
 session_start();
 // $users = [];
@@ -23,7 +24,8 @@ session_start();
 dump($_SESSION['unique_id']);
 if (isset($_SESSION['unique_id'])) {
     $unique_id = $_SESSION['unique_id'];
-    $users = new Users('unique_id', $unique_id);
+    $pdo = Connection::getPDO();
+    $users = new Users('unique_id', $unique_id, $pdo);
     $userLogin = $users->user[0];
     $allUsers = $users->users;
     $response = $users->renderAllUser($allUsers);

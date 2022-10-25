@@ -5,9 +5,10 @@ require_once ("../src/config/load_env.php");
 
 use App\Form;
 use App\Validate;
+use App\Connection;
+use App\ConnectionPDO;
 use App\ValidateUploadFile;
 use Cloudinary\Api\Upload\UploadApi;
-use App\ConnectionPDO;
 
 $errors = [];
 $link = $router->url('users');
@@ -27,7 +28,8 @@ else {
 
     // validate ok
     if($v->validateSignup()) {
-        $pdo = new ConnectionPDO();
+        $connect = Connection::getPDO();
+        $pdo = new ConnectionPDO($connect);
         $ok = $pdo->checkIfUserExists('email', $email);
         dump($ok);
         // check if email exists : false = user does not exist

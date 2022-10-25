@@ -3,20 +3,23 @@ session_start();
 
 use App\Form;
 use App\ChatRoom;
+use App\Connection;
 use App\ConnectionPDO;
-dump($_SESSION['unique_id']);
+
+// dump($_SESSION['unique_id']);
 
 if (!isset($_SESSION['unique_id'])) {
     header('Location: ' . $router->url('users'));
 }
 else {
+    $pdo = Connection::getPDO();
     $unique_id = $_SESSION['unique_id'];
-    $user = (new ConnectionPDO)->checkIfUserExists('unique_id', $unique_id)[0];
+    $user = (new ConnectionPDO($pdo))->checkIfUserExists('unique_id', $unique_id)[0];
    
     $friend_id = explode('=', $_SERVER['REQUEST_URI'])[1];
-    $friend = (new ConnectionPDO)->checkIfUserExists('unique_id', $friend_id)[0];
+    $friend = (new ConnectionPDO($pdo))->checkIfUserExists('unique_id', $friend_id)[0];
     // no user or no friend in table user => go back to users page
-    $chat_object = new ChatRoom;
+    $chat_object = new ChatRoom($pdo);
     $chat_data = $chat_object->get_all_chat_data($unique_id, $friend_id);
     // dump($chat_data);
 }
@@ -26,17 +29,22 @@ else {
 
 ?>
 
-<header class="d-flex my-2 mx-auto col p-2 col-md-6 col-lg-5 border border-1 bg-white">
-    <a href="<?= $router->url('users') ?> " class="align-self-center me-2" >
-        <i class="bi bi-arrow-left"  style="font-size: 2rem;"></i>
-    </a>
-    <div class="d-flex flex-wrap ">
+<header class="d-flex my-2 mx-auto col p-2 col-md-6 col-lg-5 border border-1 bg-white justify-content-between">
+    <div class="d-flex flex-wrap mx-1 ">
         <img src="<?= $user['file'] ?>" alt="image profile" class="img rounded-circle img-fluid img-thumbnail" style="width: 5rem; height: 5rem" />
         <div class="align-self-center">
             <h5 class=""><?= $user['first_name'] . ' ' . $user['last_name']?></h5>
             <h4 class=""><?= $user['status'] ?></h4>
         </div>
     </div>
+    <div class="justify-content-end d-flex flex-column ">
+        <a href="<?= $router->url('users') ?> " class="align-self-center me-2" aria-label="Home">
+            <i class="bi bi-house-door-fill"  style="font-size: 2rem;"></i>
+        </a>
+        <a href="<?= $router->url('logout') ?>" class="justify-content-end mx-1 btn btn-success">Logout</a>
+    </div>
+    
+
 </header>
 
 <div id="chat-box" class="my-2 mx-auto col p-2 col-md-6 col-lg-5 border border-1 bg-white overflow-auto">
@@ -51,7 +59,7 @@ else {
         <?php else : ?>
             <div class="income_message d-flex flex-row flex-wrap justify-content-start  my-1 p-1 mx-1 ">
                 <img class="img rounded-circle img-fluid p-1 m-1" style="width: 2rem; height: 2rem" alt="" src="<?=$friend['file'] ?>" />
-                <p class="bg-black text-white p-1 rounded text-break" style="width: 50%;"><?= $chat['message'] ?><br>
+                <p class="bg-black text-white p-1 rounded text-break" style="width: 50%;"><?= $chat['message']  ?><br>
                     <span class="text-light fst-italic" style="font-size: 0.5rem"><?= $chat['created_on']?></span>
                 </p>
             </div>
@@ -62,10 +70,9 @@ else {
 <form id="form" class="form-group mx-auto col p-2 col-md-6 col-lg-5 border border-1 bg-white " action="" method="post">
     <div id="error-form" class="alert alert-danger d-none"></div>
 
-    <input type="text" class="form-control d-none" value="<?= $user['unique_id'] ?>" >
+    <input type="text" class="form-control d-none" value="<?= $user['unique_id']?>" >
     <div class="input-group flex-nowrap ">
-        <!-- <input type="text" name="message" class="form-control" placeholder="Enter your text here"> -->
-        <input type="text" class="form-control" name="message" id="message" placeholder="Enter your message here (max: 1000 characters)" maxlength="1000"  >
+        <input type="text" class="form-control" name="message" id="message" placeholder="Enter your message here (max: 1000 characters)" maxlength="1000" >
         <button class="btn btn-secondary " name="send" id="send" type="submit">
             <i class="bi bi-send input-group-text btn bg-info"></i>
         </button>
@@ -139,11 +146,9 @@ else {
         divChatUser.appendChild(fromChat);
         chatBox.appendChild(divChatUser);
         
+        // scroll to end of chat-box
         messageForm.scrollIntoView({ behavior: 'smooth', block: 'end' });
 
-        // scroll to end of chat-box
-        // chatBox.scrollTop = chatBox.scrollHeight;
-        // chatBox.scrollIntoView({ behavior: 'smooth', block: 'end' });
     };
 
     // sanitizer textarea 
@@ -170,7 +175,8 @@ else {
         else {
             let userId = <?php echo $unique_id; ?>;
             let friendId = <?php echo $friend_id; ?>;
-            let msg = htmlEntities(message.value);
+            let msg = encodeURIComponent(message.value);
+            
             let data = {
                 'userId': userId,
                 'friendId': friendId,

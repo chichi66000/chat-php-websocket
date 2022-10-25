@@ -4,9 +4,9 @@ session_start();
 
 use App\Form;
 use App\Validate;
+use App\Connection;
 use App\ConnectionPDO;
 
-dump($_SESSION['unique_id']);
 
 $errors = [];
 $link = $router->url('users');
@@ -26,7 +26,8 @@ else {
     if ($v->validateLogin()) 
     {
         // check if email exist in database
-        $pdo = new ConnectionPDO();
+        $connect = Connection::getPDO();
+        $pdo = new ConnectionPDO($connect);
         $result = $pdo->checkIfUserExists('email', $email);
         // user isn't in table user
         if (empty($result)) {

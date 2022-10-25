@@ -2,7 +2,7 @@
 namespace App;
 
 use PDO;
-use App\ConnectionPDO;
+// use App\ConnectionPDO;
 
 class ChatRoom {
     public $userId;
@@ -13,17 +13,8 @@ class ChatRoom {
     public $status;
     protected $pdo;
 
-    // public function __construct ($dsn='mysql:dbname=chat;host=127.0.0.1', $user='root', $password='0123') {
-    //     $this->connect = new PDO($dsn, $user, $password, [
-    //         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    //     ]);
-    // }
-
-    public function __construct () {
-        $this->pdo = new PDO('mysql:dbname=chat;host=127.0.0.1', 'root', '0123', [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ]);
-        
+    public function __construct (PDO $pdo) {
+        $this->pdo = $pdo;
     }
 
     public function setChatId ($chat_id) 

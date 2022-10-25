@@ -2,12 +2,15 @@
 session_start();
 
 
+use App\Connection;
 use App\ConnectionPDO;
+
 if(isset($_SESSION['unique_id'])) {
     $unique_id = $_SESSION['unique_id'];
     $status = 'Offline';
     $field = 'unique_id';
-    $pdo = new ConnectionPDO();
+    $connect = Connection::getPDO();
+    $pdo = new ConnectionPDO($connect);
     $pdo->checkIfUserExists('unique_id', $unique_id);
     $pdo->updateStatus($field, $unique_id, $status);
     session_unset();
