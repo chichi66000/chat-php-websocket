@@ -1,4 +1,4 @@
-alert(goooo)
+
 const passField = document.getElementById('password');
 const toggleButton = document.querySelector(".field i");
 

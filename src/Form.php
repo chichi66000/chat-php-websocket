@@ -22,7 +22,7 @@ class Form {
     {
         $value = $this->getValueInput($key);
         if ($type === "password") {
-            $classList = "bi bi-eye-fill input-group-text btn bg-danger";
+            $classList = "bi bi-eye-fill input-group-text btn bg-warning";
             return <<<HTML
             <div class="form-group mt-1 p-1">
                 <label for="{$key}" class="">$label *</label>

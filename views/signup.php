@@ -15,7 +15,7 @@ $link = $router->url('users');
 
 if ( empty($_POST['first_name']) || empty($_POST['last_name']) || empty($_POST['email']) || empty($_POST['password']) || (empty($_FILES['file']))) 
 {
-    $errors = ['champs' => 'Les chamsp ne doivent pas être vide'];
+    $errors = ['champs' => 'Please give us your information'];
 }
 else {
     $first_name = $_POST['first_name'];
@@ -113,11 +113,10 @@ if(!empty($errors)) {
 $form = new Form($_POST, $errors);
 ?>
 
-<header class="my-2 mx-auto col p-2">Realtime Chat App</header>
+<header class="my-2 mx-auto col p-2 text-center fs-1 " style="color: #2E4234" >Realtime Chat App</header>
 
 <section class="container mx-auto p-4 col-md-6 col-lg-5 border border-1">
     <form method="post" enctype="multipart/form-data" class="form-group mx-auto signup">
-
 
         <!-- Error validate input -->
         <?php if(!empty($messagesArray)): ?>
@@ -135,7 +134,7 @@ $form = new Form($_POST, $errors);
         <?= $form->input('password', 'Password', 'password') ?>
         <?= $form->input('file', 'Image Profile (Max: 2Mo)', 'file') ?>
 
-        <div class="mx-auto bg-black rounded text-center">
+        <div class="mx-auto bg-black rounded text-center my-2 ">
             <input class="btn text-white" id="btnSubmit" type="submit" value="Continue to chat">
         </div>
     </form>
@@ -145,3 +144,20 @@ $form = new Form($_POST, $errors);
     </div>
 
 </section>
+
+<script >
+    // const passField = document.getElementById('password');
+    // const toggleButton = document.querySelector(".field i");
+
+    // toggleButton.addEventListener('click', () => {
+    //     if (passField.type === "text") {
+    //     passField.type='password';
+    //     toggleButton.classList.remove('bi-eye-fill')
+    //     toggleButton.classList.add('bi-eye-slash-fill')
+    //     } else {
+    //         passField.type = 'text';
+    //         toggleButton.classList.add('bi-eye-fill')
+    //         toggleButton.classList.remove('bi-eye-slash-fill')
+    //     }
+    // })
+</script>

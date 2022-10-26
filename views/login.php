@@ -12,9 +12,10 @@ $errors = [];
 $link = $router->url('users');
 $form = new Form($_POST, $errors);
 
-if (empty($_POST)) {
+if (empty($_POST) || !isset($_POST['email']) ||  !isset($_POST['password'])) {
     http_response_code(400);
-    $errors[] = "Please enter email and password";
+    header('Location: ' . $router->url('login'));
+    // $errors[] = "Please enter email and password";
 }
 else {
     $email = $_POST['email'];
@@ -81,10 +82,10 @@ else {
 ?>
 
 
-<header class="my-2 mx-auto col p-2">Login</header>
+<header class="my-2 mx-auto col p-2 text-center fs-1" style="color: #2E4234">Login</header>
 
-<section class="container mx-auto p-4 col-md-6 col-lg-5 border border-1">
-    <form action="" method="post" class="form-group mx-auto ">
+<section class="container mx-auto p-4 col-md-6 col-lg-5 border border-1 h-auto vh-50">
+    <form action="" method="post" class="form-group mx-auto p-1 ">
         <!-- Error validate input -->
         <?php if(!empty($errors)): ?>
             <div class="alert alert-danger">
@@ -96,17 +97,30 @@ else {
 
         <?= $form->input('email', 'Email', 'email') ?>
         <?= $form->input('password', 'Password', 'password') ?>
-        <div class="col mx-auto w-25 bg-black rounded text-center">
+        <div class="col mx-auto w-25 bg-black rounded text-center my-2">
             <input class="btn text-white" type="submit" value="Login">
         </div>
 
     </form>
 
-    <div>Not yet have account?
+    <div class= "p-1">Not yet have account?
         <a href="<?= $router->url('signup') ?>" class="">Sign up</a>
     </div>
 </section>
 
-<script>
-    
+<script >
+    // const passField = document.getElementById('password');
+    // const toggleButton = document.querySelector(".field i");
+
+    // toggleButton.addEventListener('click', () => {
+    //     if (passField.type === "text") {
+    //     passField.type='password';
+    //     toggleButton.classList.remove('bi-eye-fill')
+    //     toggleButton.classList.add('bi-eye-slash-fill')
+    //     } else {
+    //         passField.type = 'text';
+    //         toggleButton.classList.add('bi-eye-fill')
+    //         toggleButton.classList.remove('bi-eye-slash-fill')
+    //     }
+    // })
 </script>

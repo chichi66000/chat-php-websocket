@@ -113,7 +113,7 @@ class ChatRoom {
 
     // public function get_user_all_data_with_status_count () {
     //     $query = "SELECT unique_id, first_name, last_name, file, status, 
-    //                 (SELECT * FROM messages WHERE to_user_id = :user_id AND from_user_id = user.unique_id AND status = 'No') 
+    //                 (SELECT COUNT(*) FROM messages WHERE to_user_id = :user_id AND from_user_id = user.unique_id AND status = 'No') 
     //                 AS count_status FROM user ";
     //     $statement = $this->connect->prepare($query);
     //     $statement->execute([":user_id" => $this->userId]);
