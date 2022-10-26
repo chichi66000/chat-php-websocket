@@ -16,6 +16,7 @@ $link = $router->url('users');
 if ( empty($_POST['first_name']) || empty($_POST['last_name']) || empty($_POST['email']) || empty($_POST['password']) || (empty($_FILES['file']))) 
 {
     $errors = ['champs' => 'Please give us your information'];
+
 }
 else {
     $first_name = $_POST['first_name'];
@@ -145,7 +146,7 @@ $form = new Form($_POST, $errors);
 
 </section>
 
-<script >
+<script src="showhidepass.js">
     // const passField = document.getElementById('password');
     // const toggleButton = document.querySelector(".field i");
 

@@ -14,7 +14,7 @@ $form = new Form($_POST, $errors);
 
 if (empty($_POST) || !isset($_POST['email']) ||  !isset($_POST['password'])) {
     http_response_code(400);
-    header('Location: ' . $router->url('login'));
+    
     // $errors[] = "Please enter email and password";
 }
 else {
@@ -108,19 +108,5 @@ else {
     </div>
 </section>
 
-<script >
-    // const passField = document.getElementById('password');
-    // const toggleButton = document.querySelector(".field i");
-
-    // toggleButton.addEventListener('click', () => {
-    //     if (passField.type === "text") {
-    //     passField.type='password';
-    //     toggleButton.classList.remove('bi-eye-fill')
-    //     toggleButton.classList.add('bi-eye-slash-fill')
-    //     } else {
-    //         passField.type = 'text';
-    //         toggleButton.classList.add('bi-eye-fill')
-    //         toggleButton.classList.remove('bi-eye-slash-fill')
-    //     }
-    // })
+<script src="showhidepass.js">
 </script>
