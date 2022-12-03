@@ -5,9 +5,13 @@ require '../vendor/autoload.php';
 use App\Router;
 
 
+// use Ratchet\Server\IoServer;
+// use Ratchet\Http\HttpServer;
+// use Ratchet\WebSocket\WsServer;
+// use App\Chat;
+
 $router = new Router(dirname(__DIR__) . '/views');
 
-// $router = new Router(dirname(__DIR__));
 
 $router
     // ->get('/', 'index.php', 'home')
@@ -21,3 +25,15 @@ $router
     ->get('/error', 'NotFound', 'notfound')
     ->run();
 
+
+    
+// $server = IoServer::factory(
+//     new HttpServer(
+//         new WsServer(
+//             new Chat()
+//         )
+//     ),
+//     8080
+// );
+
+// $server->run();

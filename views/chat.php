@@ -89,6 +89,7 @@ else {
 
     })
     
+    // // var conn = new WebSocket('ws://https://chat-app-websocket-php.herokuapp.com:8080?sender=<?php echo $unique_id?>');
     var conn = new WebSocket('ws://localhost:8080?sender=<?php echo $unique_id?>');
     conn.onopen = function(e) {
         console.log("Connection established!");
@@ -176,6 +177,7 @@ else {
             let userId = <?php echo $unique_id; ?>;
             let friendId = <?php echo $friend_id; ?>;
             let msg = encodeURIComponent(message.value);
+            // let msg = htmlEntities(message.value);
             
             let data = {
                 'userId': userId,
