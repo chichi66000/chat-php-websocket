@@ -32,7 +32,7 @@ class ConnectionPDO extends \PDO{
     // insert user into table user
     public function insertUser (string $unique_id, string $firstName, string $lastName, string $email, string $password,string $file, string $status, string $created_at): bool 
     {
-        $query = $this->pdo->prepare("INSERT INTO user (unique_id, first_name, last_name, email, password, file, status, created_at) VALUES (:unique_id, :first_name, :last_name, :email, :password, :file, :status, :created_at)");
+        $query = $this->pdo->prepare("INSERT INTO user (unique_id, first_name, last_name, email, password, file, status, created_at, user_connection_id) VALUES (:unique_id, :first_name, :last_name, :email, :password, :file, :status, :created_at, :user_connection_id)");
         $result = $query->execute([
             "unique_id" => $unique_id,
             "first_name" => $firstName,
@@ -42,7 +42,7 @@ class ConnectionPDO extends \PDO{
             "file" => $file,
             "status" => $status,
             "created_at" => $created_at, 
-            
+            "user_connection_id" => 0
         ]);
         // insert false => retire photo du Cloudinary
         if ($result === false) {

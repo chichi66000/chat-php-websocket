@@ -71,7 +71,7 @@ class Chat implements MessageComponentInterface {
         
         $receiver = (new ConnectionPDO($pdo))->checkIfUserExists('unique_id', $data['friendId'])[0];
         $receiverName = $receiver['first_name'] . ' ' . $receiver['last_name'];
-        $receiver_user_connction_id = $receiver['user_connection_id'];
+        $receiver_user_connection_id = $receiver['user_connection_id'];
         $receiverImg = $receiver['file'];
 
         $data['dt'] = date('Y-m-d H:i:s');
@@ -93,7 +93,7 @@ class Chat implements MessageComponentInterface {
             }
             
             // check if receiver is connected?
-            if ( $client->resourceId === $receiver_user_connction_id || $from == $client) {
+            if ( $client->resourceId === $receiver_user_connection_id || $from == $client) {
                 $client->send(json_encode($data));
             }
             else {
