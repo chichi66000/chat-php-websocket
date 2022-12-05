@@ -43,12 +43,12 @@ class Chat implements MessageComponentInterface {
         
         $userId = $data['userId'];
         $receiverId = $data['friendId'];
-        dump($data['msg']);
+        // dump($data['msg']);
         $message = urldecode($data['msg']);
         // $message = html_entity_decode($data['msg']);
         // $message = rawurlencode($data['msg']);
 
-        dump("eee ", $message);
+        // dump("eee ", $message);
         $created_on = date('Y-m-d H:i:s');
         $status = 'Yes';
 
