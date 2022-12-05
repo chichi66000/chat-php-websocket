@@ -8,12 +8,14 @@ class Connection {
     public static function getPDO () :PDO 
   {
     // $cleardb_url= $_ENV['CLEARDB_DATABASE_URL'];
-    // $cleardb_server = $_ENV['CLEARDB_HOST'];
-    // $cleardb_username = $_ENV['CLEARDB_USER'];
-    // $cleardb_password = $_ENV['CLEARDB_PASSWORD'];
-    // $cleardb_db = $_ENV['CLEARDB_DB'];
+    $cleardb_server = $_ENV['MYSQLHOST'];
+    $cleardb_username = $_ENV['MYSQLUSER'];
+    $cleardb_password = $_ENV['MYSQLPASSWORD'];
+    $cleardb_db = $_ENV['MYSQLDATABASE'];
+    $cleardb_port= $_ENV['MYSQLPORT'];
+    // dd($cleardb_db, $cleardb_password, $cleardb_username, $cleardb_server, $cleardb_port); 
 
-    return new PDO("mysql:dbname=chat;host=127.0.0.1", "root", "0123", [
+    return new PDO('mysql:host='.$cleardb_server.';dbname='.$cleardb_db.';port='.$cleardb_port, $cleardb_username, $cleardb_password, [
       PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
   }
