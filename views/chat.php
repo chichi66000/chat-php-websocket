@@ -90,7 +90,8 @@ else {
     })
     
     // // var conn = new WebSocket('ws://https://chat-app-websocket-php.herokuapp.com:8080?sender=<?php echo $unique_id?>');
-    var conn = new WebSocket('ws://localhost:8080?sender=<?php echo $unique_id?>');
+    // var conn = new WebSocket('ws:/localhost:8080?sender=<?php echo $unique_id?>');
+    var conn = new WebSocket('ws://chat-php-websocket.up.railway.app:8080?sender=<?php echo $unique_id?>');
     conn.onopen = function(e) {
         console.log("Connection established!");
     };
